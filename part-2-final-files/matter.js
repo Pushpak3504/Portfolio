@@ -1,3 +1,47 @@
+document
+  .querySelector('form[name="contactUS"]')
+  .addEventListener("submit", async function (event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    // Get form values
+    const name = document.querySelector("#name").value;
+    const email = document.querySelector("#email").value;
+    const message = document.querySelector("#message").value;
+
+    // Simple validation
+    if (!name || !email || !message) {
+      alert("Please fill out all fields.");
+      return;
+    }
+
+    try {
+      // Make a POST request to the server at localhost:3000/contactUs
+      const response = await fetch("http://localhost:3000/contactUs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          message: message,
+        }),
+      });
+
+      // Parse the JSON response
+      const data = await response.json();
+      if (data.message === "Email sent successfully") {
+        alert("Your message has been sent successfully!");
+        document.querySelector('form[name="contactUS"]').reset(); // Reset the form after success
+      } else {
+        alert("There was an error sending your message. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred. Please try again.");
+    }
+  });
+
 var canvas = document.querySelector("#wrapper-canvas");
 
 var dimensions = {
